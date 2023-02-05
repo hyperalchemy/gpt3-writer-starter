@@ -29,8 +29,8 @@ const generateAction = async (req, res) => {
   // I build Prompt #2.
   const secondPrompt = 
   `
-  Take the list of side effects and food below and generate an instagram post and make it feel like there's a conspiracy theory behind the consumption of such food without sounding ideological. 
-  Conclude the post providing an alternative food explaining the chemical components. Make it feel like you're trying to sell a product.
+  Take the list of side effects and food below and generate an post from the perspective of an influencer that is trying to seel some food product, and make it feel like there's a conspiracy theory behind the consumption of such food without sounding ideological. 
+  Conclude the post providing an alternative food explaining the chemical components. Make it short.
 
   Food: ${req.body.userInput}
 
