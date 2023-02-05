@@ -5,6 +5,30 @@ import { useState } from 'react';
 
 const Home = () => {
   const [userInput, setUserInput] = useState('');
+
+  const [apiOutput, setApiOutput] = useState('')
+const [isGenerating, setIsGenerating] = useState(false)
+
+const callGenerateEndpoint = async () => {
+  setIsGenerating(true);
+  
+  console.log("Calling OpenAI...")
+  const response = await fetch('/api/generate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ userInput }),
+  });
+
+  const data = await response.json();
+  const { output } = data;
+  console.log("OpenAI replied...", output.text)
+
+  setApiOutput(`${output.text}`);
+  setIsGenerating(false);
+}
+
   const onUserChangedText = (event) => {
     //console.log(event.target.value);
     setUserInput(event.target.value);
@@ -17,11 +41,11 @@ const Home = () => {
       <div className="container">
         <div className="header">
           <div className="header-title">
-            <h1>Masterchef GPT </h1>
+            <h1>Health Buddy</h1>
           </div>
           <div className="header-subtitle">
-            <h2>Write a quick sentence about what you want to cook <br/>
-              (ex. best ingredients for a carbonara, how to prepare lasagna, make pizza from scratch)</h2>
+            <h2>Write what you're having for dinner and I'll reveal the truth about your health. <br/>
+              (ex. pasta, boiled eggs, broccoli and carrots)</h2>
           </div>
           <div className="prompt-container">
           <textarea 
@@ -32,12 +56,28 @@ const Home = () => {
           />
         </div>
         <div className="prompt-buttons">
-    <a className="generate-button" onClick={null}>
-      <div className="generate">
-        <p>Generate</p>
+  <a
+    className={isGenerating ? 'generate-button loading' : 'generate-button'}
+    onClick={callGenerateEndpoint}
+  >
+    <div className="generate">
+    {isGenerating ? <span className="loader"></span> : <p>Generate</p>}
+    </div>
+  </a>
+</div>
+        
+  {apiOutput && (
+  <div className="output">
+    <div className="output-header-container">
+      <div className="output-header">
+        <h3>Output</h3>
       </div>
-    </a>
+    </div>
+    <div className="output-content">
+      <p>{apiOutput}</p>
+    </div>
   </div>
+)}
         </div>
       </div>
       <div className="badge-container grow">
